@@ -1,4 +1,5 @@
 # Applied C++: Return Multiple Values
+The best way to return multiple values from a C++17 function.
 
 ## Analysis
 Please see the [detailed analysis on Medium](https://medium.com/applied/applied-c-return-multiple-values-b142ff8c014a).
