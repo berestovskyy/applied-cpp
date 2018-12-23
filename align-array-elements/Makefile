@@ -1,10 +1,10 @@
 ##
 ## SPDX-License-Identifier: MIT
-## Copyright (c) 2018 Andriy Berestovskyy
+## Copyright (c) 2018 Andriy Berestovskyy <berestovskyy@gmail.com>
 ##
 
 PROG     = $(basename $(word 1, $(wildcard *.cpp)))
-CXXFLAGS+= -Wall -std=c++17 -O3
+CXXFLAGS+= -Wall -Werror -Wpedantic -std=c++17 -O3
 LDFLAGS +=
 
 OBJS     = ${PROG}.o

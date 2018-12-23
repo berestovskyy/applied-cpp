@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2018 Andriy Berestovskyy
+ * Copyright (c) 2018 Andriy Berestovskyy <berestovskyy@gmail.com>
  *
  * Applied C++: Return Multiple Values
  * The best way to return multiple values from a C++17 function

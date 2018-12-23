@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2018 Andriy Berestovskyy
+ * Copyright (c) 2018 Andriy Berestovskyy <berestovskyy@gmail.com>
  *
  * Applied C++: Align Array Elements
  * How to align element in an array using C++11 alignas specifier
@@ -48,8 +48,8 @@ using std::cout;
 void check_alignment(const int &element) {
   /* Re-intepret address of the element as an unsigned integer */
   auto address = reinterpret_cast<std::uintptr_t>(&element);
-  printf("\tchecking element at address %p: %s to 64 bytes\n", &element,
-         address % 64 == 0 ? "aligned" : "not aligned");
+  cout << "\telement at address " << &element << " is "
+       << (address % 64 == 0 ? "aligned" : "not aligned") << " to 64 bytes\n";
 }
 
 int main() {
