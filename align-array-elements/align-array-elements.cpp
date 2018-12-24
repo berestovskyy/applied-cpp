@@ -8,9 +8,6 @@
 
 #include <iostream>
 
-/* This global variable introduces disalignment for the following array */
-int _;
-
 /*
  * "Do I Know This Already?" Quiz
  * How to define an array so each its element is aligned to 64 bytes?
