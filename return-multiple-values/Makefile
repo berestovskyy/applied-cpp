@@ -4,7 +4,8 @@
 ##
 
 PROG     = $(basename $(word 1, $(wildcard *.cpp)))
-CXXFLAGS+= -Wall -Werror -Wpedantic -std=c++17 -O3
+CXXFLAGS+= -Wall -Wextra -Wpedantic -Wshadow -Wpointer-arith \
+           -Wcast-qual -Werror -std=c++17 -O3
 LDFLAGS +=
 
 OBJS     = ${PROG}.o
