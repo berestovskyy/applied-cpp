@@ -8,7 +8,27 @@
 
 #include <iostream>
 
-/* This global variable introduces disalignment for the following array */
+/*
+ * Definition of CACHE_ALIGNED macro:
+ *   for clang and GCC: attribute((aligned))
+ *   for MSVC: declspec(align)
+ *
+ * Note: cache line size is 64 bytes for x86, but 128 bytes for ARM
+ */
+#if defined(__GNUC__)
+#define CACHE_ALIGNED __attribute__((aligned(64)))
+#elif defined(_MSC_VER)
+#define CACHE_ALIGNED __declspec(align(64))
+#endif
+
+/*
+ * The following variable is needed here to introduce a misalignment
+ * for the following `array` variable.
+ *
+ * Without this global integer, the `array` will be the first global
+ * variable in `.bss`, hence the first element of the `array` will be
+ * aligned to the 64 bytes
+ */
 int _;
 
 /*
@@ -21,14 +41,33 @@ int array[4];
 alignas(64) int option_1[4];
 
 /* Option 2: Using attribute((aligned)) after the type declaration */
-int __attribute__((aligned(64))) option_2[4];
+int CACHE_ALIGNED option_2[4];
 
-/* Option 3: Using attribute((aligned)) at the very end */
-int option_3[4] __attribute__((aligned(64)));
+/*
+ * Option 3: Using attribute((aligned)) at the very end
+ * Note: this generates the following error on MSVC:
+ *       error C2144: syntax error: 'int' should be preceded by ';'
+ */
+#if defined(__GNUC__)
+int option_3[4] CACHE_ALIGNED;
+#elif defined(_MSC_VER)
+/* No option 3 for MSVC */
+int option_3[4];
+#endif
 
-/* Option 4: Using attribute((aligned)) and a typedef */
-typedef __attribute__((aligned(64))) int aligned_t;
+/*
+ * Option 4: Using attribute((aligned)) and a typedef
+ * Note: this generates the following error on GCC:
+ *       error: alignment of array elements is greater than element
+ */
+#if defined(__clang__) || defined(_MSC_VER)
+typedef CACHE_ALIGNED int aligned_t;
 aligned_t option_4[4];
+#else
+/* No option 3 for GCC */
+typedef int aligned_t;
+aligned_t option_4[4];
+#endif
 
 /*
  * Solution (workaround): an array of structures
@@ -59,13 +98,13 @@ int main() {
   cout << "alignas(64) int option_1[4];\n";
   for (auto &e : option_1) check_alignment(e);
 
-  cout << "int __attribute__((aligned(64))) option_2[4];\n";
+  cout << "int CACHE_ALIGNED option_2[4];\n";
   for (auto &e : option_2) check_alignment(e);
 
-  cout << "int option_3[4] __attribute__((aligned(64)));\n";
+  cout << "int option_3[4] CACHE_ALIGNED;\n";
   for (auto &e : option_3) check_alignment(e);
 
-  cout << "typedef __attribute__((aligned(64))) int aligned_t;\n"
+  cout << "typedef CACHE_ALIGNED int aligned_t;\n"
           "aligned_t option_4[4];\n";
   for (auto &e : option_4) check_alignment(e);
 
